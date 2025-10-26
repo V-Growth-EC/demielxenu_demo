@@ -1,0 +1,6 @@
+{
+  "DATABASE_URL": "postgresql://postgres:fje5W1C0uLOshLnAmdf1@ec-db.cluster-ckfayia6mz4j.us-east-1.rds.amazonaws.com:5432/postgres",
+  "NODE_ENV": "production",
+  "API_KEY": "ak_d98545386008dbcf1743337df60f038cdd336f270fa15bbd7e32cfa9d7ccee1f",
+  "ALLOWED_ORIGINS": "https://www3.edu-cart.jp,https://edu-cart.jp"
+}
