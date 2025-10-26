@@ -1,13 +1,23 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import Header from '../components/Header';
 import CartRelatedSwiper from '../components/CartRelatedSwiper';
 import useCartStore from '../store/cartStore';
 
 export default function CartPage() {
-  const { cart, productDetailsCache, setProductDetail, updateCartQuantity } = useCartStore();
+  const { cart, productDetailsCache, setProductDetail, updateCartQuantity, removeFromCart } = useCartStore();
   const [loading, setLoading] = useState(true);
+  const [quantityInputs, setQuantityInputs] = useState({});
+
+  // 初始化數量輸入框的本地狀態
+  useEffect(() => {
+    const inputs = {};
+    cart.forEach(item => {
+      inputs[item.product_id] = item.quantity;
+    });
+    setQuantityInputs(inputs);
+  }, [cart]);
 
   useEffect(() => {
     async function fetchAllDetails() {
@@ -43,6 +53,23 @@ export default function CartPage() {
   const shipping = 0;
   const total = subtotal + shipping;
 
+  // 處理數量變更的函數
+  const handleQuantityChange = useCallback((product_id, value) => {
+    const newQuantity = Math.max(1, Number(value) || 1);
+    setQuantityInputs(prev => ({
+      ...prev,
+      [product_id]: newQuantity
+    }));
+  }, []);
+
+  // 處理數量輸入框失去焦點時更新購物車
+  const handleQuantityBlur = useCallback((product_id) => {
+    const newQuantity = quantityInputs[product_id];
+    if (newQuantity && newQuantity !== cart.find(item => String(item.product_id) === String(product_id))?.quantity) {
+      updateCartQuantity(product_id, newQuantity);
+    }
+  }, [quantityInputs, cart, updateCartQuantity]);
+
   return (
     <div className="is-cart">
       <Header />
@@ -76,7 +103,7 @@ export default function CartPage() {
                               <div className="thumb">
                                 <i
                                   className="delete-ic"
-                                  onClick={() => useCartStore.getState().removeFromCart(item.product_id)}
+                                  onClick={() => removeFromCart(item.product_id)}
                                   style={{ cursor: 'pointer' }}
                                 >
                                   <img src="images/common/ic-cross.svg" alt="削除" />
@@ -97,16 +124,18 @@ export default function CartPage() {
                                 type="number"
                                 className="input-text qty text en"
                                 name=""
-                                value={item.quantity}
+                                value={quantityInputs[item.product_id] || item.quantity}
                                 min={1}
                                 onChange={e => {
-                                  // 数量を即座に更新（オプション、または onBlur 時のみ更新）
-                                  updateCartQuantity(item.product_id, e.target.value);
+                                  handleQuantityChange(item.product_id, e.target.value);
+                                }}
+                                onBlur={() => {
+                                  handleQuantityBlur(item.product_id);
                                 }}
                               />
                             </td>
                             <td className="subtotal en">¥{getSubtotal(item).toLocaleString()}</td>
-                            <td className="delete"><a href="" onClick={() => useCartStore.getState().removeFromCart(item.product_id)}>削除</a></td>
+                            <td className="delete"><a href="" onClick={(e) => { e.preventDefault(); removeFromCart(item.product_id); }}>削除</a></td>
                           </tr>
                         );
                       })

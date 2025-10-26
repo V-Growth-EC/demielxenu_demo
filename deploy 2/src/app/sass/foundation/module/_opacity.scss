@@ -1,9 +1,0 @@
-
-// --------------------------------------------------
-// OPACITY
-// --------------------------------------------------
-@mixin opacity($opacity){
-  opacity: $opacity;
-  $opacityIE: $opacity * 100;
-  filter: alpha(opacity=$opacityIE);
-}

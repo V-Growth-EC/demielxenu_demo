@@ -1,0 +1,60 @@
+service: order-crud-lambda
+
+provider:
+  name: aws
+  runtime: nodejs18.x
+  region: ap-northeast-1  # Tokyo region, adjust as needed
+  stage: ${opt:stage, 'dev'}
+  environment:
+    DATABASE_URL: ${env:DATABASE_URL}
+    NODE_ENV: ${env:NODE_ENV, 'production'}
+    API_KEY: ${env:API_KEY}
+    ALLOWED_ORIGINS: ${env:ALLOWED_ORIGINS, '*'}
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - logs:CreateLogGroup
+        - logs:CreateLogStream
+        - logs:PutLogEvents
+      Resource: "arn:aws:logs:*:*:*"
+
+functions:
+  orderCrud:
+    handler: index.handler
+    name: order-crud-${self:provider.stage}
+    description: CRUD operations for orders
+    timeout: 30
+    memorySize: 256
+    events:
+      - http:
+          path: orders
+          method: ANY
+          cors: true
+          throttling:
+            burstLimit: 100
+            rateLimit: 50
+      - http:
+          path: orders/{id}
+          method: ANY
+          cors: true
+          throttling:
+            burstLimit: 100
+            rateLimit: 50
+
+plugins:
+  - serverless-offline
+
+custom:
+  serverless-offline:
+    httpPort: 3001
+    host: 0.0.0.0
+
+package:
+  patterns:
+    - '!node_modules/.cache/**'
+    - '!test/**'
+    - '!.git/**'
+    - '!.env*'
+    - '!README.md'
+    - '!DEPLOYMENT_GUIDE.md'
+

@@ -9,8 +9,12 @@ export default function Header() {
   const [searchKeyword, setSearchKeyword] = useState('');
   const lastScroll = useRef(0);
   const getCartCount = useCartStore(state => state.getCartCount);
+  const rehydrate = useCartStore(state => state.rehydrate);
 
   useEffect(() => {
+    // 強制重新水合購物車狀態
+    rehydrate();
+    
     // まず customer_id を取得
     fetch('/api/check-auth')
       .then(res => res.json())
@@ -33,7 +37,7 @@ export default function Header() {
       .catch((error) => {
         setError('API 接続に失敗しました: ' + error.message);
       });
-  }, []);
+  }, [rehydrate]);
 
   // ログアウト機能
   const handleLogout = async () => {
@@ -69,6 +73,19 @@ export default function Header() {
     window.addEventListener('scroll', onScroll);
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
+
+  // 頁面可見性檢測，當用戶返回頁面時重新水合購物車狀態
+  useEffect(() => {
+    const handleVisibilityChange = () => {
+      if (!document.hidden) {
+        console.log('頁面重新可見，重新水合購物車狀態');
+        rehydrate();
+      }
+    };
+
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+    return () => document.removeEventListener('visibilitychange', handleVisibilityChange);
+  }, [rehydrate]);
 
   const closeDrawer = () => {
     setIsDrawerOpen(false);
