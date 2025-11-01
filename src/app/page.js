@@ -10,6 +10,7 @@ export default function HomePage() {
   const [filteredProducts, setFilteredProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [keyword, setKeyword] = useState('');
+  const [bannerData, setBannerData] = useState(null);
   console.log("8/23HomePage");
   // 検索キーワードをURLから取得
   useEffect(() => {
@@ -48,6 +49,26 @@ export default function HomePage() {
       .finally(() => {
         setLoading(false);
       });
+  }, []);
+
+  // Banner API 取得
+  useEffect(() => {
+    fetch('/api/check-auth')
+      .then(res => res.json())
+      .then(auth => {
+        if (auth.customer_id && typeof auth.customer_id === 'number' && auth.customer_id !== -1) {
+          // Banner API を取得
+          return fetch(`/api/banner?customer_id=${auth.customer_id}`);
+        } else {
+          throw new Error('認証されていません');
+        }
+      })
+      .then(res => res.json())
+      .then(data => {
+        setBannerData(data);
+        console.log('Banner data received:', data);
+      })
+      .catch(() => console.error('Banner API 接続エラー'));
   }, []);
 
   // 前端検索フィルタリング機能

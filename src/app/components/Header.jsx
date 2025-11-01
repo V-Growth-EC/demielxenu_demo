@@ -105,11 +105,11 @@ export default function Header() {
   return (
     <header className={`header header-front header-lower-home${isScroll ? ' scroll' : ''}`}>
           <div className="header-news flex">
-        <p className="header-news_ttl">キャンペーンニュースが入ります</p>
+        <p className="header-news_ttl"></p>
         <p className="header-author">
           ようこそ
           <span style={customer ? { color: `#${customer.customer_color}` } : {}}>
-            {customer ? customer.customer_name : 'V-Growth デモサイト'}
+            {customer ? customer.customer_name : ''}
           </span>
           様
           {/* <button 
