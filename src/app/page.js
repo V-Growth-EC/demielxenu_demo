@@ -65,7 +65,6 @@ export default function HomePage() {
         const descriptionMatch = product.description && 
           product.description.toLowerCase().includes(searchTerm);
         
-        // 只要產品名字或描述其中一個匹配就返回 true
         return nameMatch || descriptionMatch;
       });
       setFilteredProducts(filtered);
@@ -81,7 +80,7 @@ export default function HomePage() {
       <MainVisualSwiper />
 
       <div className="is-home-wrap flex-set">
-        {/* サイドバー */}
+        
         <aside className="aside">
           <nav className="aside-box aside-nav">
             <div className="aside-nav-box">
@@ -118,7 +117,7 @@ export default function HomePage() {
               <span className="en">HOW TO USE</span>
             </p>
           </div>
-        </aside>
+        </aside> 
 
         {/* メインコンテンツ（商品リスト） */}
         <main className="is-page-main is-home-main">
@@ -149,7 +148,7 @@ export default function HomePage() {
                 {filteredProducts.map((p) => (
                   <li key={p.product_id} className="article-clm_lists__item article-products_lists__item clm_item">
                     <div className="thumb">
-                      <img src={p.thumnnail_img} alt={p.product_name} />
+                      <img src={p.thumbnail_img} alt={p.product_name} />
                     </div>
                     <div className="txt">
                       <h3 className="ttl-post">{p.product_name}</h3>

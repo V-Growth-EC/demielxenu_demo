@@ -114,9 +114,12 @@ export default function CartPage() {
                                   {product.product_name || '---'}
                                 </a>
                               </span>
-                              <div style={{fontSize:'12px',color:'#888'}}>
-                                {item.stylus ? 'スタイラスペンあり' : 'スタイラスペンなし'}／{item.keyboard ? '無線キーボードあり' : '無線キーボードなし'}
-                              </div>
+                              {/* 暫時隱藏 - スタイラスペンと無線キーボード */}
+                              {false && (
+                                <div style={{fontSize:'12px',color:'#888'}}>
+                                  {item.stylus ? 'スタイラスペンあり' : 'スタイラスペンなし'}／{item.keyboard ? '無線キーボードあり' : '無線キーボードなし'}
+                                </div>
+                              )}
                             </td>
                             <td className="price en">¥{product.price?.toLocaleString() || 0}</td>
                             <td className="quantity">
@@ -193,7 +196,8 @@ export default function CartPage() {
             </div>
           </aside>
         </div>
-        <CartRelatedSwiper />
+        {/* 関連商品は現在非表示 */}
+        {/* <CartRelatedSwiper /> */}
       </div>
     </div>
   );
