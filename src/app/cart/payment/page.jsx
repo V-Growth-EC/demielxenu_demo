@@ -430,7 +430,8 @@ export default function PaymentPage() {
                         <span>銀行振込</span>
                       </label>
                     )}
-                    {orderFormData?.payments?.includes('apply') && (
+                    {/* 代金引換は現在無効 */}
+                    {/* {orderFormData?.payments?.includes('apply') && (
                       <label className="payment-options_item">
                         <input
                           type="radio"
@@ -441,7 +442,7 @@ export default function PaymentPage() {
                         />
                         <span>代金引換</span>
                       </label>
-                    )}
+                    )} */}
                   </div>
                 </div>
                 <button type="submit" className="btn-cart">決済する</button>

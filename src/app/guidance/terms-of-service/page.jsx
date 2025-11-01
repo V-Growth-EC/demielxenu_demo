@@ -28,19 +28,21 @@ export default function TermsOfServicePage() {
               <p>本規約は、当社が運営するオンラインショップにおいて、学校や塾向けに販売されるIoT製品（以下「本製品」といいます）の購入、返品、配送、支払いに関する条件を定めることを目的としています。</p>
             </div>
 
-            <div className="is-guidance-box">
+            {/* 会員登録は現在非表示 */}
+            {/* <div className="is-guidance-box">
               <h3>会員登録</h3>
               <ul className="bullets">
                 <li className="bullets_item">本ショップをご利用いただくためには、会員登録が必要です。会員登録は、当社所定の手続きに従って行ってください。</li>
                 <li className="bullets_item">会員登録時に提供された情報は、正確かつ最新の情報を提供するものとし、登録情報に変更があった場合は速やかに更新してください。</li>
               </ul>
-            </div>
+            </div> */}
 
             <div className="is-guidance-box">
               <h3>商品の購入</h3>
               <ul className="bullets">
                 <li className="bullets_item">本ショップにおける商品の購入は、当社が指定する手順に従って行っていただきます。購入手続きが完了した時点で、売買契約が成立したものとみなします。</li>
-                <li className="bullets_item">会員登録時に提供された情報は、正確かつ最新の情報を提供するものとし、登録情報に変更があった場合は速やかに更新してください。</li>
+                {/* 会員登録は現在非表示 */}
+                {/* <li className="bullets_item">会員登録時に提供された情報は、正確かつ最新の情報を提供するものとし、登録情報に変更があった場合は速やかに更新してください。</li> */}
               </ul>
             </div>
 
@@ -115,12 +117,11 @@ export default function TermsOfServicePage() {
             <div className="is-guidance-box">
               <h3>お問い合わせ</h3>
               <p>
-                本規約に関するご質問やご不明点がある場合は、以下の連絡先までご連絡ください。<br />
-                [会社名]◯◯◯◯<br />
-                [担当者名]◯◯◯◯<br />
-                [住所]◯◯◯◯<br />
-                [電話番号]◯◯◯◯<br />
-                [メールアドレス]◯◯◯◯
+                本プライバシーポリシーに関するご質問や、ご自身の個人情報に関するお問い合わせは、下記の連絡先までご連絡ください。<br />
+                法人名: 株式会社V-Growth<br />
+                所在地: 〒105-0011 東京都港区芝公園2-10-1 住友不動産芝園ビル 8F<br />
+                電話番号: 03-6777-5120<br />
+                メールアドレス: edu-ict@v-growth.co.jp
               </p>
             </div>
           </section>

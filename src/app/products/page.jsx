@@ -178,24 +178,30 @@ function ProductDetailContent() {
                 </select>
               </div>
             </div>
-            <div className="form-group">
-              <label htmlFor="option1">スタイラスペン</label>
-              <div className="select-wrapper">
-                <select name="option1" id="option1" className="form-control" value={stylus ? 'with_stylus' : 'without_stylus'} onChange={e => setStylus(e.target.value === 'with_stylus')}>
-                  <option value="with_stylus">あり</option>
-                  <option value="without_stylus">なし</option>
-                </select>
+            {/* 一時的に非表示 - スタイラスペン */}
+            {false && (
+              <div className="form-group">
+                <label htmlFor="option1">スタイラスペン</label>
+                <div className="select-wrapper">
+                  <select name="option1" id="option1" className="form-control" value={stylus ? 'with_stylus' : 'without_stylus'} onChange={e => setStylus(e.target.value === 'with_stylus')}>
+                    <option value="with_stylus">あり</option>
+                    <option value="without_stylus">なし</option>
+                  </select>
+                </div>
               </div>
-            </div>
-            <div className="form-group">
-              <label htmlFor="option2">無線キーボード</label>
-              <div className="select-wrapper">
-                <select name="option2" id="option2" className="form-control" value={keyboard ? 'with_keyboard' : 'without_keyboard'} onChange={e => setKeyboard(e.target.value === 'with_keyboard')}>
-                  <option value="with_keyboard">あり</option>
-                  <option value="without_keyboard">なし</option>
-                </select>
+            )}
+            {/* 一時的に非表示 - 無線キーボード */}
+            {false && (
+              <div className="form-group">
+                <label htmlFor="option2">無線キーボード</label>
+                <div className="select-wrapper">
+                  <select name="option2" id="option2" className="form-control" value={keyboard ? 'with_keyboard' : 'without_keyboard'} onChange={e => setKeyboard(e.target.value === 'with_keyboard')}>
+                    <option value="with_keyboard">あり</option>
+                    <option value="without_keyboard">なし</option>
+                  </select>
+                </div>
               </div>
-            </div>
+            )}
             <button type="submit" className="btn-cart ">カートに入れる</button>
           </form>
         </div>

@@ -1,9 +1,40 @@
 'use client';
 
+import { useEffect, useState } from 'react';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 
 export default function FAQPage() {
+  const [faqData, setFaqData] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    setLoading(true);
+    setError('');
+    
+    // まず customer_id を取得
+    fetch('/api/check-auth')
+      .then(res => res.json())
+      .then(auth => {
+        if (auth.customer_id && typeof auth.customer_id === 'number' && auth.customer_id !== -1) {
+          // FAQ API を取得
+          return fetch(`/api/faq?customer_id=${auth.customer_id}`);
+        } else {
+          throw new Error('認証されていません');
+        }
+      })
+      .then(res => res.json())
+      .then(data => {
+        setFaqData(data);
+        console.log('FAQ data received:', data);
+      })
+      .catch(() => setError('FAQ API 接続エラー'))
+      .finally(() => {
+        setLoading(false);
+      });
+  }, []);
+
   return (
     <>
       <Header />
