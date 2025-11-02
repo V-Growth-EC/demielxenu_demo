@@ -136,7 +136,7 @@
           top: calc(50% - 6px);
           left: calc(50% - 7px);
           text-align: center;
-          background: url('../images/common/ic-ar-r.svg') center / cover no-repeat;
+          background: url('/images/common/ic-ar-r.svg') center / cover no-repeat;
           @media #{$tb}{}
           @media #{$sp}{}
         }
@@ -204,7 +204,7 @@
               width: 10px;
               height: 6px;
               content: '';
-              background: url('../images/common/ic-ar-b.svg') center / cover no-repeat;
+              background: url('/images/common/ic-ar-b.svg') center / cover no-repeat;
               position: absolute;
               top: calc(50% - 3px);
               right: 20px;
@@ -222,8 +222,10 @@
           appearance: none;
           border: 0;
           color: #fff;
+          @include transition(.5s);
           &:hover{
             cursor: pointer;
+            @include opacity(.7);
           }
         }
       }

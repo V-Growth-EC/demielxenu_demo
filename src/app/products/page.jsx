@@ -22,6 +22,7 @@ function ProductDetailContent() {
   const [quantity, setQuantity] = useState(1);
   const [stylus, setStylus] = useState(true);
   const [keyboard, setKeyboard] = useState(true);
+  const [bannerData, setBannerData] = useState(null);
 
   useEffect(() => {
     if (!product_id) {
@@ -76,6 +77,26 @@ function ProductDetailContent() {
       });
     }
   }, [isDataLoaded, product]);
+
+  // Banner API 取得
+  useEffect(() => {
+    fetch('/api/check-auth')
+      .then(res => res.json())
+      .then(auth => {
+        if (auth.customer_id && typeof auth.customer_id === 'number' && auth.customer_id !== -1) {
+          // Banner API を取得
+          return fetch(`/api/banner?customer_id=${auth.customer_id}`);
+        } else {
+          throw new Error('認証されていません');
+        }
+      })
+      .then(res => res.json())
+      .then(data => {
+        setBannerData(data.banners);
+        console.log('Banner data received:', data);
+      })
+      .catch(() => console.error('Banner API 接続エラー'));
+  }, []);
 
   return (
     <div className="is-single-wrap flex-set">
@@ -178,35 +199,58 @@ function ProductDetailContent() {
                 </select>
               </div>
             </div>
-            <div className="form-group">
-              <label htmlFor="option1">スタイラスペン</label>
-              <div className="select-wrapper">
-                <select name="option1" id="option1" className="form-control" value={stylus ? 'with_stylus' : 'without_stylus'} onChange={e => setStylus(e.target.value === 'with_stylus')}>
-                  <option value="with_stylus">あり</option>
-                  <option value="without_stylus">なし</option>
-                </select>
+            {/* 一時的に非表示 - スタイラスペン */}
+            {false && (
+              <div className="form-group">
+                <label htmlFor="option1">スタイラスペン</label>
+                <div className="select-wrapper">
+                  <select name="option1" id="option1" className="form-control" value={stylus ? 'with_stylus' : 'without_stylus'} onChange={e => setStylus(e.target.value === 'with_stylus')}>
+                    <option value="with_stylus">あり</option>
+                    <option value="without_stylus">なし</option>
+                  </select>
+                </div>
               </div>
-            </div>
-            <div className="form-group">
-              <label htmlFor="option2">無線キーボード</label>
-              <div className="select-wrapper">
-                <select name="option2" id="option2" className="form-control" value={keyboard ? 'with_keyboard' : 'without_keyboard'} onChange={e => setKeyboard(e.target.value === 'with_keyboard')}>
-                  <option value="with_keyboard">あり</option>
-                  <option value="without_keyboard">なし</option>
-                </select>
+            )}
+            {/* 一時的に非表示 - 無線キーボード */}
+            {false && (
+              <div className="form-group">
+                <label htmlFor="option2">無線キーボード</label>
+                <div className="select-wrapper">
+                  <select name="option2" id="option2" className="form-control" value={keyboard ? 'with_keyboard' : 'without_keyboard'} onChange={e => setKeyboard(e.target.value === 'with_keyboard')}>
+                    <option value="with_keyboard">あり</option>
+                    <option value="without_keyboard">なし</option>
+                  </select>
+                </div>
               </div>
-            </div>
+            )}
             <button type="submit" className="btn-cart ">カートに入れる</button>
           </form>
         </div>
         <div className="aside-bnr">
           <ul className="aside-bnr_lsts">
-            <li className="aside-bnr_lists__item">
-              <a href=""><img src="/images/common/bnr-1.png" alt="" /></a>
-            </li>
-            <li className="aside-bnr_lists__item">
-              <a href=""><img src="/images/common/bnr-2.png" alt="" /></a>
-            </li>
+            {bannerData && Array.isArray(bannerData) ? (
+              <>
+                {bannerData
+                  .filter(b => b.banner_type && b.banner_type.startsWith('product-'))
+                  .map((banner, index) => (
+                    <li key={banner.banner_type || index} className="aside-bnr_lists__item">
+                      <a href="">
+                        <img src={banner.banner_url || `/images/common/bnr-${index + 1}.png`} alt="" />
+                      </a>
+                    </li>
+                  ))}
+              </>
+            ) : (
+              // 如果没有 banner 数据，显示默认图片
+              <>
+                {/* <li className="aside-bnr_lists__item">
+                  <a href=""><img src="/images/common/bnr-1.png" alt="" /></a>
+                </li>
+                <li className="aside-bnr_lists__item">
+                  <a href=""><img src="/images/common/bnr-2.png" alt="" /></a>
+                </li> */}
+              </>
+            )}
           </ul>
         </div>
       </aside>

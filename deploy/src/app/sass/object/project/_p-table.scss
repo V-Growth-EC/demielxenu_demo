@@ -117,6 +117,7 @@
             background: #fbfbfc;
             @include bdrs(50%);
             @include shadow;
+            display: none;
           }
         }
         .ttl{
