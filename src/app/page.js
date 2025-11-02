@@ -65,7 +65,7 @@ export default function HomePage() {
       })
       .then(res => res.json())
       .then(data => {
-        setBannerData(data);
+        setBannerData(data.banners);
         console.log('Banner data received:', data);
       })
       .catch(() => console.error('Banner API 接続エラー'));
@@ -98,7 +98,7 @@ export default function HomePage() {
     <>
       <Header />
 
-      <MainVisualSwiper />
+      <MainVisualSwiper bannerData={bannerData} />
 
       <div className="is-home-wrap flex-set">
         
@@ -190,9 +190,41 @@ export default function HomePage() {
       {/* バナー */}
       <div className="ftr-bnr">
         <ul className="ftr-bnr_lists flex flex-stretch">
-          <li className="ftr-bnr_lists__item"><a href=""><img src="/images/common/bnr-1.png" alt="" /></a></li>
-          <li className="ftr-bnr_lists__item"><a href=""><img src="/images/common/bnr-2.png" alt="" /></a></li>
-          <li className="ftr-bnr_lists__item"><a href=""><img src="/images/common/bnr-3.png" alt="" /></a></li>
+          {bannerData && Array.isArray(bannerData) ? (
+            <>
+              {/* bottom-1 banner */}
+              {bannerData.find(b => b.banner_type === 'bottom-1') && (
+                <li className="ftr-bnr_lists__item">
+                  <a href="">
+                    <img src={bannerData.find(b => b.banner_type === 'bottom-1')?.banner_url || '/images/common/bnr-1.png'} alt="" />
+                  </a>
+                </li>
+              )}
+              {/* bottom-2 banner */}
+              {bannerData.find(b => b.banner_type === 'bottom-2') && (
+                <li className="ftr-bnr_lists__item">
+                  <a href="">
+                    <img src={bannerData.find(b => b.banner_type === 'bottom-2')?.banner_url || '/images/common/bnr-2.png'} alt="" />
+                  </a>
+                </li>
+              )}
+              {/* bottom-3 banner */}
+              {bannerData.find(b => b.banner_type === 'bottom-3') && (
+                <li className="ftr-bnr_lists__item">
+                  <a href="">
+                    <img src={bannerData.find(b => b.banner_type === 'bottom-3')?.banner_url || '/images/common/bnr-3.png'} alt="" />
+                  </a>
+                </li>
+              )}
+            </>
+          ) : (
+            // バナーデータがない場合はデフォルト画像を表示
+            <>
+              {/* <li className="ftr-bnr_lists__item"><a href=""><img src="/images/common/bnr-1.png" alt="" /></a></li>
+              <li className="ftr-bnr_lists__item"><a href=""><img src="/images/common/bnr-2.png" alt="" /></a></li>
+              <li className="ftr-bnr_lists__item"><a href=""><img src="/images/common/bnr-3.png" alt="" /></a></li> */}
+            </>
+          )}
         </ul>
       </div>
     </>

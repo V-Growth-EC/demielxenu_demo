@@ -22,6 +22,7 @@ function ProductDetailContent() {
   const [quantity, setQuantity] = useState(1);
   const [stylus, setStylus] = useState(true);
   const [keyboard, setKeyboard] = useState(true);
+  const [bannerData, setBannerData] = useState(null);
 
   useEffect(() => {
     if (!product_id) {
@@ -76,6 +77,26 @@ function ProductDetailContent() {
       });
     }
   }, [isDataLoaded, product]);
+
+  // Banner API 取得
+  useEffect(() => {
+    fetch('/api/check-auth')
+      .then(res => res.json())
+      .then(auth => {
+        if (auth.customer_id && typeof auth.customer_id === 'number' && auth.customer_id !== -1) {
+          // Banner API を取得
+          return fetch(`/api/banner?customer_id=${auth.customer_id}`);
+        } else {
+          throw new Error('認証されていません');
+        }
+      })
+      .then(res => res.json())
+      .then(data => {
+        setBannerData(data.banners);
+        console.log('Banner data received:', data);
+      })
+      .catch(() => console.error('Banner API 接続エラー'));
+  }, []);
 
   return (
     <div className="is-single-wrap flex-set">
@@ -207,12 +228,29 @@ function ProductDetailContent() {
         </div>
         <div className="aside-bnr">
           <ul className="aside-bnr_lsts">
-            <li className="aside-bnr_lists__item">
-              <a href=""><img src="/images/common/bnr-1.png" alt="" /></a>
-            </li>
-            <li className="aside-bnr_lists__item">
-              <a href=""><img src="/images/common/bnr-2.png" alt="" /></a>
-            </li>
+            {bannerData && Array.isArray(bannerData) ? (
+              <>
+                {bannerData
+                  .filter(b => b.banner_type && b.banner_type.startsWith('product-'))
+                  .map((banner, index) => (
+                    <li key={banner.banner_type || index} className="aside-bnr_lists__item">
+                      <a href="">
+                        <img src={banner.banner_url || `/images/common/bnr-${index + 1}.png`} alt="" />
+                      </a>
+                    </li>
+                  ))}
+              </>
+            ) : (
+              // 如果没有 banner 数据，显示默认图片
+              <>
+                {/* <li className="aside-bnr_lists__item">
+                  <a href=""><img src="/images/common/bnr-1.png" alt="" /></a>
+                </li>
+                <li className="aside-bnr_lists__item">
+                  <a href=""><img src="/images/common/bnr-2.png" alt="" /></a>
+                </li> */}
+              </>
+            )}
           </ul>
         </div>
       </aside>

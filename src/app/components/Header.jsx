@@ -28,6 +28,7 @@ export default function Header() {
       })
       .then(res => res.json())
       .then(data => {
+        console.log('customer-detail data:', data);
         if (data.customer_name) {
           setCustomer(data);
         } else {
@@ -108,7 +109,7 @@ export default function Header() {
         <p className="header-news_ttl"></p>
         <p className="header-author">
           ようこそ
-          <span style={customer ? { color: `#${customer.customer_color}` } : {}}>
+          <span style={customer ? { color: `#${customer.color_code}` } : {}}>
             {customer ? customer.customer_name : ''}
           </span>
           様
