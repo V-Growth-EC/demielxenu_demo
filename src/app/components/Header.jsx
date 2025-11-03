@@ -9,8 +9,12 @@ export default function Header() {
   const [searchKeyword, setSearchKeyword] = useState('');
   const lastScroll = useRef(0);
   const getCartCount = useCartStore(state => state.getCartCount);
+  const rehydrate = useCartStore(state => state.rehydrate);
 
   useEffect(() => {
+    // 強制重新水合購物車狀態
+    rehydrate();
+    
     // まず customer_id を取得
     fetch('/api/check-auth')
       .then(res => res.json())
@@ -24,6 +28,7 @@ export default function Header() {
       })
       .then(res => res.json())
       .then(data => {
+        console.log('customer-detail data:', data);
         if (data.customer_name) {
           setCustomer(data);
         } else {
@@ -33,7 +38,7 @@ export default function Header() {
       .catch((error) => {
         setError('API 接続に失敗しました: ' + error.message);
       });
-  }, []);
+  }, [rehydrate]);
 
   // ログアウト機能
   const handleLogout = async () => {
@@ -70,6 +75,19 @@ export default function Header() {
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
+  // 頁面可見性檢測，當用戶返回頁面時重新水合購物車狀態
+  useEffect(() => {
+    const handleVisibilityChange = () => {
+      if (!document.hidden) {
+        console.log('頁面重新可見，重新水合購物車狀態');
+        rehydrate();
+      }
+    };
+
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+    return () => document.removeEventListener('visibilitychange', handleVisibilityChange);
+  }, [rehydrate]);
+
   const closeDrawer = () => {
     setIsDrawerOpen(false);
   };
@@ -88,11 +106,11 @@ export default function Header() {
   return (
     <header className={`header header-front header-lower-home${isScroll ? ' scroll' : ''}`}>
           <div className="header-news flex">
-        <p className="header-news_ttl">キャンペーンニュースが入ります</p>
+        <p className="header-news_ttl"></p>
         <p className="header-author">
           ようこそ
-          <span style={customer ? { color: `#${customer.customer_color}` } : {}}>
-            {customer ? customer.customer_name : 'V-Growth デモサイト'}
+          <span style={customer ? { color: `#${customer.color_code}` } : {}}>
+            {customer ? customer.customer_name : ''}
           </span>
           様
           {/* <button 
@@ -123,7 +141,7 @@ export default function Header() {
               <li className="is-nav_lists__item"><a href="/">商品一覧</a></li>
               <li className="is-nav_lists__item"><a href="/guidance/terms-of-service">はじめての方へ</a></li>
               <li className="is-nav_lists__item"><a href="/faq/">よくあるご質問</a></li>
-              <li className="is-nav_lists__item"><a href="mailto:edu-ict@v-growth.co.jp?subject=【ICT学習支援機器販売サイト】ECサイトお問い合わせ&body=【お名前】%0D%0A【所属されている塾・学校名】%0D%0A【ご連絡先（メールアドレス または 電話番号）】%0D%0A【お問い合わせ内容】" target="_blank">お問い合わせ</a></li>
+              <li className="is-nav_lists__item"><a href="/guidance/privacy-policy#contact">お問い合わせ</a></li>
             </ul>
           </nav>
           <div className="is-nav sp">
@@ -142,7 +160,7 @@ export default function Header() {
                     <li className="is-nav_lists__item"><a href="/" onClick={closeDrawer}>商品一覧</a></li>
                     <li className="is-nav_lists__item"><a href="/guidance/terms-of-service" onClick={closeDrawer}>はじめての方へ</a></li>
                     <li className="is-nav_lists__item"><a href="/faq/" onClick={closeDrawer}>よくあるご質問</a></li>
-                    <li className="is-nav_lists__item"><a href="/contents/" onClick={closeDrawer}>お問い合わせ</a></li>
+                    <li className="is-nav_lists__item"><a href="/guidance/privacy-policy#contact" onClick={closeDrawer}>お問い合わせ</a></li>
                   </ul>
                 </div>
               </nav>

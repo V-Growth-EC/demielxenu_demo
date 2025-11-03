@@ -93,13 +93,12 @@ export default function PrivacyPolicyPage() {
 
             <div className="is-guidance-box">
               <h3>お問い合わせ</h3>
-              <p>
+              <p id="contact">
                 本プライバシーポリシーに関するご質問や、ご自身の個人情報に関するお問い合わせは、下記の連絡先までご連絡ください。<br />
-                [会社名]◯◯◯◯<br />
-                [担当者名]◯◯◯◯<br />
-                [住所]◯◯◯◯<br />
-                [電話番号]◯◯◯◯<br />
-                [メールアドレス]◯◯◯◯
+                法人名: 株式会社V-Growth<br />
+                所在地: 〒105-0011 東京都港区芝公園2-10-1 住友不動産芝園ビル 8F<br />
+                電話番号: 03-6777-5120<br />
+                メールアドレス: edu-ict@v-growth.co.jp
               </p>
             </div>
           </section>
