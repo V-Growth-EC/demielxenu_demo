@@ -1,0 +1,8 @@
+{
+  "Variables": {
+    "DATABASE_URL": "postgresql://postgres:fje5W1C0uLOshLnAmdf1@ec-db.cluster-ckfayia6mz4j.us-east-1.rds.amazonaws.com:5432/postgres",
+    "NODE_ENV": "production",
+    "API_KEY": "your-secure-api-key-here-change-this-in-production",
+    "ALLOWED_ORIGINS": "https://yourdomain.com,https://www.yourdomain.com"
+  }
+}

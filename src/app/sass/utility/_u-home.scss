@@ -48,10 +48,15 @@
         appearance: none;
         border: 0;
         color: #fff;
+        @include transition(.5s);
         @media #{$sp}{
           width: 80%;
           margin: 0 auto;
           display: block;
+        }
+        &:hover{
+          cursor: pointer;
+          @include opacity(.7);
         }
       }
     }

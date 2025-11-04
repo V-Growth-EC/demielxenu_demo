@@ -1,0 +1,33 @@
+{
+  "name": "order-crud-lambda",
+  "version": "1.0.0",
+  "description": "AWS Lambda function for order CRUD operations",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "deploy": "zip -r order-crud-lambda.zip . && aws lambda update-function-code --function-name order-crud --zip-file fileb://order-crud-lambda.zip",
+    "generate-api-key": "node generate-api-key.js generate",
+    "generate-api-key-prefixed": "node generate-api-key.js generate-prefixed ak 32",
+    "validate-api-key": "node generate-api-key.js validate",
+    "test-auth": "node test-authentication.js",
+    "deploy-serverless": "serverless deploy",
+    "deploy-serverless-dev": "serverless deploy --stage dev",
+    "deploy-serverless-prod": "serverless deploy --stage prod"
+  },
+  "dependencies": {
+    "pg": "^8.11.3"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "keywords": [
+    "aws",
+    "lambda",
+    "postgresql",
+    "orders",
+    "crud"
+  ],
+  "author": "Your Name",
+  "license": "MIT"
+}
+

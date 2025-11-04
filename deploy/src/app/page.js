@@ -10,6 +10,7 @@ export default function HomePage() {
   const [filteredProducts, setFilteredProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [keyword, setKeyword] = useState('');
+  const [bannerData, setBannerData] = useState(null);
   console.log("8/23HomePage");
   // 検索キーワードをURLから取得
   useEffect(() => {
@@ -50,6 +51,26 @@ export default function HomePage() {
       });
   }, []);
 
+  // Banner API 取得
+  useEffect(() => {
+    fetch('/api/check-auth')
+      .then(res => res.json())
+      .then(auth => {
+        if (auth.customer_id && typeof auth.customer_id === 'number' && auth.customer_id !== -1) {
+          // Banner API を取得
+          return fetch(`/api/banner?customer_id=${auth.customer_id}`);
+        } else {
+          throw new Error('認証されていません');
+        }
+      })
+      .then(res => res.json())
+      .then(data => {
+        setBannerData(data.banners);
+        console.log('Banner data received:', data);
+      })
+      .catch(() => console.error('Banner API 接続エラー'));
+  }, []);
+
   // 前端検索フィルタリング機能
   useEffect(() => {
     console.log("keyword:", keyword);
@@ -65,7 +86,6 @@ export default function HomePage() {
         const descriptionMatch = product.description && 
           product.description.toLowerCase().includes(searchTerm);
         
-        // 只要產品名字或描述其中一個匹配就返回 true
         return nameMatch || descriptionMatch;
       });
       setFilteredProducts(filtered);
@@ -78,10 +98,10 @@ export default function HomePage() {
     <>
       <Header />
 
-      <MainVisualSwiper />
+      <MainVisualSwiper bannerData={bannerData} />
 
       <div className="is-home-wrap flex-set">
-        {/* サイドバー */}
+        
         <aside className="aside">
           <nav className="aside-box aside-nav">
             <div className="aside-nav-box">
@@ -118,7 +138,7 @@ export default function HomePage() {
               <span className="en">HOW TO USE</span>
             </p>
           </div>
-        </aside>
+        </aside> 
 
         {/* メインコンテンツ（商品リスト） */}
         <main className="is-page-main is-home-main">
@@ -149,7 +169,7 @@ export default function HomePage() {
                 {filteredProducts.map((p) => (
                   <li key={p.product_id} className="article-clm_lists__item article-products_lists__item clm_item">
                     <div className="thumb">
-                      <img src={p.thumnnail_img} alt={p.product_name} />
+                      <img src={p.thumbnail_img} alt={p.product_name} />
                     </div>
                     <div className="txt">
                       <h3 className="ttl-post">{p.product_name}</h3>
@@ -170,9 +190,41 @@ export default function HomePage() {
       {/* バナー */}
       <div className="ftr-bnr">
         <ul className="ftr-bnr_lists flex flex-stretch">
-          <li className="ftr-bnr_lists__item"><a href=""><img src="/images/common/bnr-1.png" alt="" /></a></li>
-          <li className="ftr-bnr_lists__item"><a href=""><img src="/images/common/bnr-2.png" alt="" /></a></li>
-          <li className="ftr-bnr_lists__item"><a href=""><img src="/images/common/bnr-3.png" alt="" /></a></li>
+          {bannerData && Array.isArray(bannerData) ? (
+            <>
+              {/* bottom-1 banner */}
+              {bannerData.find(b => b.banner_type === 'bottom-1') && (
+                <li className="ftr-bnr_lists__item">
+                  <a href="">
+                    <img src={bannerData.find(b => b.banner_type === 'bottom-1')?.banner_url || '/images/common/bnr-1.png'} alt="" />
+                  </a>
+                </li>
+              )}
+              {/* bottom-2 banner */}
+              {bannerData.find(b => b.banner_type === 'bottom-2') && (
+                <li className="ftr-bnr_lists__item">
+                  <a href="">
+                    <img src={bannerData.find(b => b.banner_type === 'bottom-2')?.banner_url || '/images/common/bnr-2.png'} alt="" />
+                  </a>
+                </li>
+              )}
+              {/* bottom-3 banner */}
+              {bannerData.find(b => b.banner_type === 'bottom-3') && (
+                <li className="ftr-bnr_lists__item">
+                  <a href="">
+                    <img src={bannerData.find(b => b.banner_type === 'bottom-3')?.banner_url || '/images/common/bnr-3.png'} alt="" />
+                  </a>
+                </li>
+              )}
+            </>
+          ) : (
+            // バナーデータがない場合はデフォルト画像を表示
+            <>
+              {/* <li className="ftr-bnr_lists__item"><a href=""><img src="/images/common/bnr-1.png" alt="" /></a></li>
+              <li className="ftr-bnr_lists__item"><a href=""><img src="/images/common/bnr-2.png" alt="" /></a></li>
+              <li className="ftr-bnr_lists__item"><a href=""><img src="/images/common/bnr-3.png" alt="" /></a></li> */}
+            </>
+          )}
         </ul>
       </div>
     </>

@@ -1,8 +1,0 @@
-{
-  "/api/check-auth/route": "app/api/check-auth/route.js",
-  "/api/product-detail/route": "app/api/product-detail/route.js",
-  "/api/customer-detail/route": "app/api/customer-detail/route.js",
-  "/api/order-form/route": "app/api/order-form/route.js",
-  "/cart/page": "app/cart/page.js",
-  "/cart/payment/page": "app/cart/payment/page.js"
-}

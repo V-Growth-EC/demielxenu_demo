@@ -20,33 +20,26 @@ export default function TransactionLawPage() {
           
           <section className="is-guidance-inner">
             <div className="is-guidance-box">
-              <h3>販売業者</h3>
-              <p>株式会社[貴社名]（以下、「当社」といいます）</p>
-            </div>
-
-            <div className="is-guidance-box">
-              <h3>運営統括責任者</h3>
-              <p>[担当者名]（役職：代表取締役）</p>
+              <h3>法人名</h3>
+              <p>株式会社V-Growth</p>
             </div>
 
             <div className="is-guidance-box">
               <h3>所在地</h3>
-              <p>大阪府大阪市北区東天満</p>
+              <p>〒105-0011 東京都港区芝公園2-10-1 住友不動産芝園ビル 8F</p>
             </div>
 
             <div className="is-guidance-box">
               <h3>電話番号</h3>
               <p>
-                00-0000-0000<br />
-                ※お客様からのお問い合わせは、平日[営業時間]に受付いたします。
+              03-6777-5120
               </p>
             </div>
 
             <div className="is-guidance-box">
               <h3>メールアドレス</h3>
               <p>
-                info@hogehoge.jp<br />
-                ※お客様からのお問い合わせは、平日[営業時間]に受付いたします。
+              edu-ict@v-growth.co.jp
               </p>
             </div>
 
@@ -71,7 +64,7 @@ export default function TransactionLawPage() {
               <ul className="bullets">
                 <li className="bullets_item">クレジットカード決済</li>
                 <li className="bullets_item">銀行振込（前払い）</li>
-                <li className="bullets_item">代金引換（代引き）</li>
+                {/* <li className="bullets_item">代金引換（代引き）</li> */}
               </ul>
             </div>
 
@@ -80,7 +73,7 @@ export default function TransactionLawPage() {
               <ul className="bullets">
                 <li className="bullets_item">クレジットカード決済の場合：注文確認後、通常[出荷日数]営業日以内に発送します。</li>
                 <li className="bullets_item">銀行振込の場合：ご入金確認後、通常[出荷日数]営業日以内に発送します。</li>
-                <li className="bullets_item">代金引換の場合：注文確認後、通常[出荷日数]営業日以内に発送します。</li>
+                {/* <li className="bullets_item">代金引換の場合：注文確認後、通常[出荷日数]営業日以内に発送します。</li> */}
               </ul>
             </div>
 
@@ -104,7 +97,7 @@ export default function TransactionLawPage() {
               <ul className="bullets">
                 <li className="bullets_item">送料</li>
                 <li className="bullets_item">振込手数料（銀行振込を選択された場合）</li>
-                <li className="bullets_item">代金引換手数料（代金引換を選択された場合）</li>
+                {/* <li className="bullets_item">代金引換手数料（代金引換を選択された場合）</li> */}
               </ul>
             </div>
 

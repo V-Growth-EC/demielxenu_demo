@@ -25,7 +25,7 @@ export async function GET(request) {
       return NextResponse.json({ error: '外部API錯誤', status: res.status, detail: errorText }, { status: res.status });
     }
     const data = await res.json();
-    // console.log('外部APIレスポンス:', data);
+    console.log('product-overview data:', data);
     return NextResponse.json(data, { status: res.status });
   } catch (error) {
     return NextResponse.json({ error: '查詢失敗', detail: error.message }, { status: 500 });
