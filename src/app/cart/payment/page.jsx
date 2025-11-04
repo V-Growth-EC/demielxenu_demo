@@ -7,14 +7,16 @@ import useCartStore from '../../store/cartStore';
 
 export default function PaymentPage() {
   const [formData, setFormData] = useState({
-    classroom: '',
+    // classroom: '',
     name: '',
-    guardian: '',
+    company_name: '',
+    // guardian: '',
     postal: '',
     prefecture: '',
     address: '',
     tel: '',
     email: '',
+    remarks: '',
     payment_method: 'creditcard' // 更新預設值
   });
 
@@ -109,8 +111,10 @@ export default function PaymentPage() {
   const validateForm = () => {
     const newErrors = {};
     const requiredFields = {
+      // classroom: '教室名',
       name: 'お名前',
-      guardian: '保護者名',
+      company_name: '法人名',
+      // guardian: '保護者名',
       postal: '郵便番号',
       prefecture: '都道府県',
       address: '住所',
@@ -120,8 +124,13 @@ export default function PaymentPage() {
 
     // 必須項目のチェック
     for (const [id, label] of Object.entries(requiredFields)) {
-      if (!formData[id]) {
-        newErrors[id] = `${label}を入力してください`;
+      const value = formData[id];
+      if (!value || (typeof value === 'string' && value.trim() === '')) {
+        // if (id === 'classroom') {
+        //   newErrors[id] = `${label}を選択してください`;
+        // } else {
+          newErrors[id] = `${label}を入力してください`;
+        // }
       }
     }
 
@@ -195,18 +204,21 @@ export default function PaymentPage() {
       const orderData = {
         orderId,
         amount,
-        classroom: formData.classroom,
+        // classroom: formData.classroom,
         userName: formData.name,
         email: formData.email,
+        customer_id: customerId, // 添加 customer_id
         // ユーザー入力データ
         customerInfo: {
           name: formData.name,
-          guardian: formData.guardian,
+          company_name: formData.company_name,
+          // guardian: formData.guardian,
           postal: formData.postal,
           prefecture: formData.prefecture,
           address: formData.address,
           tel: formData.tel,
           email: formData.email,
+          remarks: formData.remarks,
           payment_method: formData.payment_method
         },
         // 商品情報
@@ -224,7 +236,17 @@ export default function PaymentPage() {
         }
       };
       console.log('orderData', orderData);
-      const res = await fetch('/api/gmo-linkpay', {
+      
+      // 根據付款方式選擇不同的 API
+      let apiEndpoint;
+      if (formData.payment_method === 'banking') {
+        apiEndpoint = '/api/banking-pay';
+      } else {
+        apiEndpoint = '/api/gmo-linkpay';
+      }
+      
+      console.log('使用 API:', apiEndpoint, '付款方式:', formData.payment_method);
+      const res = await fetch(apiEndpoint, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(orderData),
@@ -233,8 +255,13 @@ export default function PaymentPage() {
       console.log('res', res);
       const data = await res.json();
       console.log('data', data);
+      
+      // 處理 GMO 信用卡付款的重定向
       if (data.redirectUrl) {
         window.location.href = data.redirectUrl;
+      } else if (data.success && formData.payment_method === 'banking') {
+        // 銀行振込成功，跳轉到完成頁面
+        window.location.href = `/cart/complete?orderId=${data.orderId}`;
       }
     }
   };
@@ -263,10 +290,16 @@ export default function PaymentPage() {
         <div className="is-cart-wrap-flex flex-set">
         <main className="is-page-main is-cart-main">
   <form className="cart-form" onSubmit={handleSubmit} noValidate>
-    <div className="form-group">
+    {/* <div className="form-group">
       <label htmlFor="classroom">教室名<span className="required">必須</span></label>
       <div className="select-wrapper">
-        <select id="classroom" name="classroom" required>
+        <select 
+          id="classroom" 
+          name="classroom" 
+          value={formData.classroom}
+          onChange={handleChange}
+          required
+        >
           <option value="">選択してください</option>
           {orderFormData?.field?.[0]?.menu?.map((classroom, index) => (
             <option key={index} value={classroom}>
@@ -275,6 +308,19 @@ export default function PaymentPage() {
           ))}
         </select>
       </div>
+      {errors.classroom && <span className="error-message">{errors.classroom}</span>}
+    </div> */}
+    <div className="form-group">
+      <label htmlFor="company_name">法人名<span className="required">必須</span></label>
+      <input
+        type="text"
+        id="company_name"
+        name="company_name"
+        value={formData.company_name}
+        onChange={handleChange}
+        required
+      />
+      {errors.company_name && <span className="error-message">{errors.company_name}</span>}
     </div>
     <div className="form-group">
       <label htmlFor="name">お名前<span className="required">必須</span></label>
@@ -288,7 +334,7 @@ export default function PaymentPage() {
       />
       {errors.name && <span className="error-message">{errors.name}</span>}
     </div>
-    <div className="form-group">
+    {/* <div className="form-group">
       <label htmlFor="guardian">保護者名<span className="required">必須</span></label>
       <input
         type="text"
@@ -299,7 +345,7 @@ export default function PaymentPage() {
         required
       />
       {errors.guardian && <span className="error-message">{errors.guardian}</span>}
-    </div>
+    </div> */}
     <div className="form-group">
       <label htmlFor="postal">郵便番号<span className="required">必須</span></label>
       <input
@@ -325,7 +371,7 @@ export default function PaymentPage() {
           required
         >
           <option value="">選択してください</option>
-          {orderFormData?.field?.[4]?.menu?.map((prefecture, index) => (
+          {orderFormData?.field?.find(f => f.field_name === '都道府県')?.menu?.map((prefecture, index) => (
             <option key={index} value={prefecture}>
               {prefecture}
             </option>
@@ -371,6 +417,17 @@ export default function PaymentPage() {
         required
       />
       {errors.email && <span className="error-message">{errors.email}</span>}
+    </div>
+    <div className="form-group">
+      <label htmlFor="remarks">備考</label>
+      <input
+        type="text"
+        id="remarks"
+        name="remarks"
+        value={formData.remarks}
+        onChange={handleChange}
+        rows={4}
+      />
     </div>
     <button type="submit"  style={{display: 'none'}} className="btn-cart">決済する</button>
   </form>
